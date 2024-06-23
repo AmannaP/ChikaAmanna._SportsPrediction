@@ -55,6 +55,13 @@ def RemoveNANs(df_FIFA2):
   numeric_data = pd.DataFrame(np.round(imp.fit_transform(numeric_data)), columns = numeric_data.columns)
   Y = numeric_data['overall'].astype(int)
   X = pd.concat([numeric_data, non_numeric_data], axis=1)
+  # Check for classes with only one sample
+  value_counts = Y.value_counts()
+  single_sample_classes = value_counts[value_counts == 1].index.tolist()
+
+  # Remove rows with target values belonging to single-sample classes
+  X = X[~Y.isin(single_sample_classes)]
+  Y = Y[~Y.isin(single_sample_classes)]
   correlations = X.corr()['overall'].sort_values(ascending=False)
   strong_correlations = correlations[:7]
   strong_correlations_columns  = strong_correlations.index.tolist()
@@ -69,7 +76,7 @@ def RemoveNANs(df_FIFA2):
 print(X.shape)
 
 # Calculate the correlation between each variable and player's overall rating
-correlations[0:60]
+correlations[0:7]
 
 X, Y = RemoveNANs(df_player22)
 Y
@@ -265,20 +272,6 @@ print("AdaBoosting feature importances:", adb_best_model.feature_importances_)
 print("Gradient Boosting best parameters:", adb_grid_search.best_params_)
 print("AdaBoosting best model feature importances:", adb_best_model.feature_importances_)
 
-final_model = gb_grid_search
-
-# import joblib
-# # joblib
-# final_model = gb_grid_search
-# # Save the trained model using pickle
-# with open('gb_grid_search.pkl', 'wb') as f:
-#     pkl.dump(final_model, f)
-# # Save the trained model using joblib
-# joblib.dump(final_model, 'gb_grid_search.pkl')
-
-# # import pickle
-
-
 import joblib
 import pickle as pkl
 
@@ -287,29 +280,3 @@ final_model = gb_grid_search
 
 # Save the trained model using joblib
 joblib.dump(final_model, '/content/drive/MyDrive/Colab Notebooks/gb_grid_search_joblib.pkl')
-
-
-
-
-
-
-
-# # Save the trained model using pickle
-# with open('gb_grid.pkl', 'wb') as f:
-#     pickle.dump(final_model, f)
-
-
-# # Save the trained model using joblib
-# joblib.dump(final_model, 'gb_grid.joblib')
-
-
-
-
-# pkl.dump(model, open(model.__class__.__name__+'pkl', 'wb'))
-
-
-# # Save the trained model using pickle
-# with open('random_forest_model.pkl', 'wb') as f:
-#     pickle.dump(xgb_grid, f)
-# # Save the trained model using joblib
-# joblib.dump(xgb_grid, 'random_forest_model.joblib')
