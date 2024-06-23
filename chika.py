@@ -31,7 +31,7 @@ def main():
     st.write('Select the features below')
     
 
-    overall = st.number_input('Overall Rating', min_value=0, max_value=100, value=50, key='overall')
+    #overall = st.number_input('Overall Rating', min_value=0, max_value=100, value=50, key='overall')
     movement_reactions = st.number_input('Movement Reactions', min_value=0, max_value=100, value=50, key='movement_reactions')
     mentality_composure = st.number_input('Mentality Composure', min_value=0, max_value=100, value=50, key='mentality_composure')
     potential = st.number_input('Potential', min_value=0, max_value=100, value=50, key='potential')
@@ -45,7 +45,7 @@ def main():
         ]
         try:
             rf_prediction = predict_rating(rf_model, input_features)
-            st.success(f'Random Forest predicted overall rating: {rf_prediction:.2f}')
+            st.success(f'Graddient Boosting Regressor predicted overall rating of the player to: {rf_prediction:.2f}')
         except Exception as e:
             st.error(f"Error during prediction: {e}")
 
